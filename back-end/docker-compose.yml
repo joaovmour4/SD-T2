@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  kubemq:
+    image: kubemq/kubemq-community:latest
+    container_name: kubemq
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+      - "9090:9090"
+    networks:
+      - my-network
+
+  nodejs-app:
+    build: .
+    container_name: nodejs-app
+    ports:
+      - "3000:3000" # Altere para a porta que o seu servidor Node.js está utilizando
+    networks:
+      - my-network
+    depends_on:
+      - kubemq
+
+networks:
+  my-network:
+    driver: bridge
