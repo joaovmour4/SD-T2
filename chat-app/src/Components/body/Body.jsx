@@ -1,13 +1,11 @@
 import React from 'react'
-import '../../App.css'
+import '../../Chat.css'
 import InputBox from '../InputBox/InputBox'
 import Message from '../Message/Message'
-import { Buffer } from 'buffer'
 
 const Body = () => {
-    const [messages, setMessages] = React.useState([{from: 'john', text: 'Hi, how are you?'}])
+    const [messages, setMessages] = React.useState([])
     const [socket, setSocket] = React.useState(null)
-    const [clientId, setClientId] = React.useState(0)
 
     React.useEffect(() => {
         // Configura o WebSocket na montagem do componente
@@ -21,13 +19,7 @@ const Body = () => {
         // Quando uma nova mensagem for recebida
         newSocket.onmessage = (event) => {
             const newMessage = JSON.parse(event.data);
-            if(newMessage.type && newMessage.type === 'clientId')
-                setClientId(newMessage.clientId)
-            else{
-                const buffer = Buffer.from(newMessage.message.data);
-                const decodedMessage = buffer.toString('utf-8');
-                setMessages((prevMessages) => [...prevMessages, {from:newMessage.clientId, text: decodedMessage}]);
-            }
+            setMessages((prevMessages) => [...prevMessages, {from:newMessage.clientId, text: newMessage.message}]);
         };
 
         // Quando a conexão for fechada
@@ -46,9 +38,8 @@ const Body = () => {
         <div className='messages-area'>
             {
                 messages.map(message => {
-                    console.log(message, clientId)
                     return(
-                        <Message message={message} clientId={clientId}/>
+                        <Message message={message}/>
                     )
                 })
             }

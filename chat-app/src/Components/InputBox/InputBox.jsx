@@ -1,12 +1,15 @@
 import React from 'react'
 import './InputBox.css'
+import { useSession } from '../../Contexts/NameContext'
 
 const InputBox = props => {
+    const Session = useSession()
     const [textMessage, setTextMessage] = React.useState('')
+
     const handleMessage = () =>{
         if(props.socket && textMessage.length && props.socket.readyState === WebSocket.OPEN){
             // props.setMessages(prevState => [...prevState, {from: 'me', text: textMessage}])
-            props.socket.send(textMessage)
+            props.socket.send(JSON.stringify({text: textMessage, id: Session.name}))
             setTextMessage('')
         }
     }
@@ -14,7 +17,8 @@ const InputBox = props => {
     const handleEnterMessage = (event) =>{
         if(props.socket && textMessage.length && (event.key === 'Enter') && props.socket.readyState === WebSocket.OPEN){
             // props.setMessages(prevState => [...prevState, JSON.stringify({from: 'me', text: textMessage})])
-            props.socket.send(textMessage)
+            console.log(Session.name)
+            props.socket.send(JSON.stringify({text: textMessage, id: Session.name}))
             setTextMessage('')
         }
     }

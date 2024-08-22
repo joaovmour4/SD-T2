@@ -1,0 +1,27 @@
+.central-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.cont{
+    display: flex;
+    align-items: center;
+    padding-inline: 20px;
+    padding-block: 15px;
+    border-radius: 30px;
+    border-style: none;
+    box-shadow: 1px 1px 5px rgba(80, 80, 80, 0.3);
+}
+
+input {
+    width: 250px;
+    border-style: none;
+    outline: none;
+}
+
+img {
+    cursor: pointer;
+}

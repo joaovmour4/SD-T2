@@ -22,7 +22,7 @@ var clientId = 0
 
 wss.on('connection', (ws) => {
     clientId += 1
-    ws.send(JSON.stringify({ type: 'clientId', clientId }))
+    // ws.send(JSON.stringify({ type: 'clientId', clientId }))
     console.log('Client connected', clientId)
     
     let channelName = 'grupao', clientID = `client${clientId}`,
@@ -32,21 +32,21 @@ wss.on('connection', (ws) => {
 
     sub.subscribeToEvents(msg => {
         // console.log(msg)
-        console.log('Event Received: EventID:' + msg.EventID + ', Channel:' + msg.Channel + ', ClientID:' + msg.clientID + ' ,Metadata:' + msg.Metadata + ', Body:' + kubemq.byteToString(msg.Body));
-        // const messageObj = JSON.parse(kubemq.byteToString(msg.Body))
-        // messageObj.message = kubemq.byteToString(messageObj.message)
-        // const message = JSON.stringify(messageObj)
+        console.log('Event Received: EventID:' + msg.EventID + ', Channel:' + msg.Channel + ' ,Metadata:' + msg.Metadata + ', Body:' + kubemq.byteToString(msg.Body));
+        
         const message = kubemq.byteToString(msg.Body)
+        console.log(message)
         ws.send(message)
     }, err => {
         console.log('error:' + err)
     })
 
     const sendMessage = (message) => {
-        let channelName = 'grupao', clientID = `client${clientId}`,
+        const decodedMessage = JSON.parse(message)
+        let channelName = 'grupao', clientID = `${decodedMessage.id}`,
             kubeMQHost = 'kubemq', kubeMQGrpcPort = '50000';
         const publisher = new kubemq.Publisher(kubeMQHost, kubeMQGrpcPort, clientID, channelName);
-        let event = new kubemq.Publisher.Event(kubemq.stringToByte(JSON.stringify({message, clientId})));
+        let event = new kubemq.Publisher.Event(kubemq.stringToByte(JSON.stringify({message: decodedMessage.text, clientId: decodedMessage.id})));
         publisher.send(event).then(
             res => {
                 console.log(res);

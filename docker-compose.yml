@@ -12,7 +12,7 @@ services:
       - my-network
 
   nodejs-app:
-    build: .
+    build: ./back-end/
     container_name: nodejs-app
     ports:
       - "3000:3000" # Altere para a porta que o seu servidor Node.js está utilizando
@@ -20,6 +20,13 @@ services:
       - my-network
     depends_on:
       - kubemq
+    
+  frontend:
+    build: ./chat-app/
+    ports:
+      - "80:80"
+    networks:
+      - my-network
 
 networks:
   my-network:

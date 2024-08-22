@@ -1,13 +1,18 @@
-import './App.css';
-import Body from './Components/body/Body';
-import Header from './Components/Header/Header';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Chat from './Chat';
+import Home from './Home';
+import { SessionProvider } from './Contexts/NameContext';
 
 function App() {
   return (
-    <div className='App'>
-      <Header />
-      <Body />
-    </div>
+    <BrowserRouter>
+      <SessionProvider>
+        <Routes>
+          <Route path='/' element={ <Home /> } />
+          <Route path='/chat' element={ <Chat /> } />
+        </Routes>
+      </SessionProvider>
+    </BrowserRouter>
   );
 }
 

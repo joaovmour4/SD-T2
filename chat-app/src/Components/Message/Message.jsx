@@ -1,8 +1,10 @@
 import React from 'react'
 import './Message.css'
+import { useSession } from '../../Contexts/NameContext'
 
 const Message = props => {
-  const me = props.message.from === props.clientId
+  const session = useSession()
+  const me = props.message.from === session.name
   return (
     <div className={me ? 'userMessage':'otherMessage'}>
       {!me &&
